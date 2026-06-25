@@ -31,6 +31,9 @@ public struct TabController: View {
     @State private var selectedTab: Tab = .detail
     @Namespace private var tabBarNamespace
     
+    // Interactive drag gesture states for 1:1 real-time sliding and stretching
+    @State private var dragOffset: CGFloat = 0
+    
     public init() {}
     
     public var body: some View {
@@ -60,7 +63,7 @@ public struct TabController: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .ignoresSafeArea(.all)
                 
-                // 3. Upgraded Liquid Water Droplet Capsule TabBar (Strict Layer Depth Hierarchy)
+                // 3. Upgraded Liquid Water Droplet Capsule TabBar (Strict Layer Depth Hierarchy + Gestures)
                 ZStack {
                     // LAYER 1 (BOTTOM): Glass Outer Capsule Shell
                     Capsule()
@@ -112,6 +115,12 @@ public struct TabController: View {
                                                 Capsule()
                                                     .fill(Color.white)
                                                     .matchedGeometryEffect(id: "liquidBubble", in: tabBarNamespace)
+                                                    .scaleEffect(
+                                                        x: 1.0 + min(abs(dragOffset) / 120.0, 0.6),
+                                                        y: 1.0 - min(abs(dragOffset) / 300.0, 0.2),
+                                                        anchor: dragOffset > 0 ? .leading : .trailing
+                                                    )
+                                                    .offset(x: dragOffset)
                                                     .frame(width: 64, height: 38)
                                             } else {
                                                 Color.clear
@@ -130,7 +139,7 @@ public struct TabController: View {
                     HStack(spacing: 0) {
                         ForEach(Tab.allCases) { tab in
                             Button(action: {
-                                // Custom spring for the water bubble stretch-and-snap interaction
+                                // Custom spring for the tab selection snap
                                 withAnimation(.spring(response: 0.38, dampingFraction: 0.68, blendDuration: 0)) {
                                     selectedTab = tab
                                 }
@@ -158,6 +167,42 @@ public struct TabController: View {
                 .padding(.horizontal, 24)
                 // Dynamic padding to float cleanly above home bar or flat screen edge
                 .padding(.bottom, safeAreaBottom > 0 ? safeAreaBottom : 12)
+                .gesture(
+                    DragGesture(minimumDistance: 5)
+                        .onChanged { value in
+                            // 1:1 Drag offset tracking directly following finger direction
+                            withAnimation(.interactiveSpring()) {
+                                dragOffset = value.translation.width
+                            }
+                        }
+                        .onEnded { value in
+                            let tabs = Tab.allCases
+                            if let currentIndex = tabs.firstIndex(of: selectedTab) {
+                                var targetIndex = currentIndex
+                                let translation = value.translation.width
+                                let predictedEndWidth = value.predictedEndTranslation.width
+                                
+                                // Velocity-aware and displacement-based snapping boundary calculation
+                                if predictedEndWidth > 50 {
+                                    targetIndex = min(tabs.count - 1, currentIndex + 1)
+                                } else if predictedEndWidth < -50 {
+                                    targetIndex = max(0, currentIndex - 1)
+                                } else {
+                                    if translation > 40 {
+                                        targetIndex = min(tabs.count - 1, currentIndex + 1)
+                                    } else if translation < -40 {
+                                        targetIndex = max(0, currentIndex - 1)
+                                    }
+                                }
+                                
+                                // Dynamic snap transition with spring physics
+                                withAnimation(.spring(response: 0.35, dampingFraction: 0.70)) {
+                                    selectedTab = tabs[targetIndex]
+                                    dragOffset = 0
+                                }
+                            }
+                        }
+                )
             }
             .ignoresSafeArea(.all, edges: .all)
         }
