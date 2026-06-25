@@ -1,21 +1,28 @@
 import SwiftUI
 import SwiftData
 
-/// Displays the premium Apple-style control center settings page.
-/// Configures global glass blur, chromatic edges, default categories sheet, and custom modal alert boxes.
+/// SettingsView rewritten to align with premium settings panel layouts.
+/// Incorporates custom-engineered liquid toggles, dynamic nested push sub-panels, 
+/// glass checkmarks, and 0.5px micro-glow line partitions.
 public struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var categories: [Category]
     @Query private var transactions: [Transaction]
     
-    // Synced AppStorage settings for global visual adaptations
-    @AppStorage("glassBlurRadius") private var glassBlurRadius: Double = 16.0
-    @AppStorage("chromaticGlowEnabled") private var chromaticGlowEnabled: Bool = true
+    // Group 1: Basic configuration settings stored in AppStorage
+    @AppStorage("monthlyStartDay") private var monthlyStartDay: Int = 1
+    @AppStorage("showRecordImages") private var showRecordImages: Bool = true
+    @AppStorage("showLocations") private var showLocations: Bool = true
+    @AppStorage("showPromos") private var showPromos: Bool = false
     
-    // Interactive states
-    @State private var isSyncing = false
-    @State private var showCategoriesSheet = false
-    @State private var showCustomResetModal = false // Custom liquid warning alert overlay trigger
+    // Group 2: Push services and nested checkmarks
+    @AppStorage("isPushEnabled") private var isPushEnabled: Bool = false
+    @AppStorage("dailyReminderEnabled") private var dailyReminderEnabled: Bool = true
+    @AppStorage("budgetWarningEnabled") private var budgetWarningEnabled: Bool = true
+    @AppStorage("featurePromoEnabled") private var featurePromoEnabled: Bool = false
+    @AppStorage("weeklyReviewEnabled") private var weeklyReviewEnabled: Bool = true
+    
+    // Interactive Modal alert triggers
+    @State private var showResetConfirmModal = false
     
     public init() {}
     
@@ -32,135 +39,165 @@ public struct SettingsView: View {
                 
                 ScrollView {
                     VStack(spacing: 24) {
-                        // Brand Profile header
-                        VStack(spacing: 14) {
-                            Image(systemName: "sparkles")
-                                .font(.system(size: 48))
-                                .foregroundColor(.cyan)
-                                .shadow(color: .cyan.opacity(0.6), radius: 12)
-                                .padding(.top, 8)
+                        
+                        // 1. Group 1: Basic configurations (Liquid Glass Card)
+                        VStack(spacing: 0) {
+                            SettingsRow(icon: "calendar", iconColor: .cyan, title: "月统计起始日") {
+                                HStack(spacing: 6) {
+                                    Text("每月\(monthlyStartDay)日")
+                                        .font(.subheadline)
+                                        .foregroundColor(.white.opacity(0.5))
+                                    Image(systemName: "chevron.right")
+                                        .font(.system(size: 13, weight: .bold))
+                                        .foregroundColor(.white.opacity(0.3))
+                                }
+                            }
                             
-                            Text("苹果记账 (jizhang)")
-                                .font(.title2.bold())
-                                .foregroundColor(.white)
+                            CustomDivider()
                             
-                            Text("Version 1.0.0 (WWDC26 Spec)")
-                                .font(.caption)
-                                .foregroundColor(.white.opacity(0.40))
+                            SettingsRow(icon: "message.fill", iconColor: .purple, title: "胖咔回复设置") {
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 13, weight: .bold))
+                                    .foregroundColor(.white.opacity(0.3))
+                            }
+                            
+                            CustomDivider()
+                            
+                            SettingsRow(icon: "dollarsign.circle.fill", iconColor: .green, title: "货币单位") {
+                                HStack(spacing: 6) {
+                                    Text("人民币 (CNY)")
+                                        .font(.subheadline)
+                                        .foregroundColor(.white.opacity(0.5))
+                                    Image(systemName: "chevron.right")
+                                        .font(.system(size: 13, weight: .bold))
+                                        .foregroundColor(.white.opacity(0.3))
+                                }
+                            }
+                            
+                            CustomDivider()
+                            
+                            SettingsRow(icon: "photo.fill", iconColor: .blue, title: "展示记录图片") {
+                                LiquidToggle(isOn: $showRecordImages)
+                            }
+                            
+                            CustomDivider()
+                            
+                            SettingsRow(icon: "mappin.and.ellipse", iconColor: .red, title: "地点展示") {
+                                LiquidToggle(isOn: $showLocations)
+                            }
+                            
+                            CustomDivider()
+                            
+                            SettingsRow(icon: "gift.fill", iconColor: .orange, title: "优惠推荐") {
+                                LiquidToggle(isOn: $showPromos)
+                            }
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding(24)
-                        .liquidGlass(cornerRadius: 24, shadowRadius: 15, borderOpacity: 0.3)
+                        .liquidGlass(cornerRadius: 24, shadowRadius: 16, borderOpacity: 0.25)
                         .chromaticEdgeGlow(cornerRadius: 24, lineWidth: 1.0, opacity: 0.20)
                         .padding(.horizontal)
                         .padding(.top, 16)
                         
-                        // 1. Visual customization controls (Blur & Chromatic aberration)
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("视觉自定义调节")
-                                .font(.subheadline.bold())
-                                .foregroundColor(.white.opacity(0.5))
-                                .padding(.horizontal, 24)
+                        // 2. Group 2: Nested pushing controls (Dynamic slide animation card)
+                        VStack(spacing: 0) {
+                            SettingsRow(icon: "bell.fill", iconColor: .yellow, title: "推送服务") {
+                                LiquidToggle(isOn: $isPushEnabled)
+                            }
                             
-                            VStack(spacing: 12) {
-                                // Row 1: Blur radius slider
-                                VStack(alignment: .leading, spacing: 8) {
-                                    HStack {
-                                        ZStack {
-                                            Circle()
-                                                .fill(Color.purple.opacity(0.15))
-                                                .frame(width: 32, height: 32)
-                                            Image(systemName: "drop.fill")
-                                                .foregroundColor(.purple)
-                                                .font(.system(size: 14, weight: .bold))
+                            if isPushEnabled {
+                                VStack(spacing: 0) {
+                                    CustomDivider()
+                                    
+                                    SettingsNestedRow(title: "每日记账提醒") {
+                                        SettingsCheckmark(isChecked: dailyReminderEnabled) {
+                                            withAnimation(.spring(response: 0.2, dampingFraction: 0.6)) {
+                                                dailyReminderEnabled.toggle()
+                                            }
                                         }
-                                        
-                                        Text("液态玻璃模糊度")
-                                            .font(.system(size: 15, weight: .semibold))
-                                            .foregroundColor(.white)
-                                        
-                                        Spacer()
-                                        
-                                        Text(String(format: "%.0f px", glassBlurRadius))
-                                            .font(.subheadline.bold())
-                                            .foregroundColor(.white.opacity(0.5))
                                     }
                                     
-                                    Slider(value: $glassBlurRadius, in: 0...30, step: 1)
-                                        .tint(.cyan)
-                                }
-                                .padding(14)
-                                .liquidGlass(cornerRadius: 16, shadowRadius: 8, borderOpacity: 0.15)
-                                .chromaticEdgeGlow(cornerRadius: 16, lineWidth: 0.8, opacity: 0.12)
-                                .padding(.horizontal)
-                                
-                                // Row 2: Chromatic glow toggle
-                                SettingsRow(icon: "rainbow", iconColor: .cyan, title: "边缘彩虹色散微光") {
-                                    Toggle("", isOn: $chromaticGlowEnabled)
-                                        .labelsHidden()
-                                        .tint(.cyan)
-                                }
-                            }
-                        }
-                        
-                        // 2. Data management (sync, categories list, custom clear warning modal)
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("数据管理与维护")
-                                .font(.subheadline.bold())
-                                .foregroundColor(.white.opacity(0.5))
-                                .padding(.horizontal, 24)
-                            
-                            VStack(spacing: 12) {
-                                // Row 1: iCloud sync button
-                                SettingsRow(icon: "icloud.and.arrow.up.fill", iconColor: .blue, title: "iCloud 备份与同步") {
-                                    Button(action: startSync) {
-                                        HStack(spacing: 6) {
-                                            if isSyncing {
-                                                ProgressView()
-                                                    .tint(.cyan)
-                                                    .scaleEffect(0.8)
+                                    CustomDivider()
+                                    
+                                    SettingsNestedRow(title: "预算超限提醒") {
+                                        SettingsCheckmark(isChecked: budgetWarningEnabled) {
+                                            withAnimation(.spring(response: 0.2, dampingFraction: 0.6)) {
+                                                budgetWarningEnabled.toggle()
                                             }
-                                            Text(isSyncing ? "同步中..." : "立即同步")
-                                                .font(.subheadline.bold())
-                                                .foregroundColor(.cyan)
                                         }
                                     }
-                                    .buttonStyle(PlainButtonStyle())
-                                    .disabled(isSyncing)
-                                }
-                                
-                                // Row 2: Default categories list launcher
-                                SettingsRow(icon: "list.bullet.indent", iconColor: .orange, title: "查看系统默认分类") {
-                                    Button(action: { showCategoriesSheet = true }) {
-                                        Text("查看分类")
-                                            .font(.subheadline.bold())
-                                            .foregroundColor(.cyan)
-                                    }
-                                    .buttonStyle(PlainButtonStyle())
-                                }
-                                
-                                // Row 3: Clear ledger button (triggers custom modal alert)
-                                SettingsRow(icon: "trash.fill", iconColor: .red, title: "一键清空账本") {
-                                    Button(action: {
-                                        withAnimation(.spring(response: 0.3, dampingFraction: 0.72)) {
-                                            showCustomResetModal = true
+                                    
+                                    CustomDivider()
+                                    
+                                    SettingsNestedRow(title: "新功能推荐通知") {
+                                        SettingsCheckmark(isChecked: featurePromoEnabled) {
+                                            withAnimation(.spring(response: 0.2, dampingFraction: 0.6)) {
+                                                featurePromoEnabled.toggle()
+                                            }
                                         }
-                                    }) {
-                                        Text("立即清空")
-                                            .font(.subheadline.bold())
-                                            .foregroundColor(.red)
                                     }
-                                    .buttonStyle(PlainButtonStyle())
+                                    
+                                    CustomDivider()
+                                    
+                                    SettingsNestedRow(title: "每周账单回顾") {
+                                        SettingsCheckmark(isChecked: weeklyReviewEnabled) {
+                                            withAnimation(.spring(response: 0.2, dampingFraction: 0.6)) {
+                                                weeklyReviewEnabled.toggle()
+                                            }
+                                        }
+                                    }
+                                }
+                                .transition(.move(edge: .top).combined(with: .opacity))
+                            }
+                        }
+                        .liquidGlass(cornerRadius: 24, shadowRadius: 16, borderOpacity: 0.25)
+                        .chromaticEdgeGlow(cornerRadius: 24, lineWidth: 1.0, opacity: 0.20)
+                        .padding(.horizontal)
+                        .animation(.spring(response: 0.36, dampingFraction: 0.74, blendDuration: 0), value: isPushEnabled)
+                        
+                        // 3. Group 3: Help, info & ledger clean
+                        VStack(spacing: 0) {
+                            SettingsRow(icon: "questionmark.circle.fill", iconColor: .teal, title: "帮助与反馈") {
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 13, weight: .bold))
+                                    .foregroundColor(.white.opacity(0.3))
+                            }
+                            
+                            CustomDivider()
+                            
+                            SettingsRow(icon: "info.circle.fill", iconColor: .gray, title: "关于App") {
+                                HStack(spacing: 6) {
+                                    Text("v1.0.0 @ WWDC26 Spec")
+                                        .font(.subheadline)
+                                        .foregroundColor(.white.opacity(0.5))
+                                    Image(systemName: "chevron.right")
+                                        .font(.system(size: 13, weight: .bold))
+                                        .foregroundColor(.white.opacity(0.3))
                                 }
                             }
-                            .padding(.horizontal)
+                            
+                            CustomDivider()
+                            
+                            SettingsRow(icon: "trash.fill", iconColor: .red, title: "一键清空账本") {
+                                Button(action: {
+                                    withAnimation(.spring(response: 0.32, dampingFraction: 0.72)) {
+                                        showResetConfirmModal = true
+                                    }
+                                }) {
+                                    Text("清空数据")
+                                        .font(.subheadline.bold())
+                                        .foregroundColor(.red)
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            }
                         }
+                        .liquidGlass(cornerRadius: 24, shadowRadius: 16, borderOpacity: 0.25)
+                        .chromaticEdgeGlow(cornerRadius: 24, lineWidth: 1.0, opacity: 0.20)
+                        .padding(.horizontal)
                     }
-                    .padding(.bottom, 120)
+                    .padding(.bottom, 140)
                 }
                 
-                // 3. Custom Liquid Glass Warning Alert Overlay
-                if showCustomResetModal {
+                // 4. Custom Liquid Glass Modal Alert Box for database reset
+                if showResetConfirmModal {
                     ZStack {
                         // Blurred dark backdrop
                         Color.black.opacity(0.4)
@@ -168,22 +205,22 @@ public struct SettingsView: View {
                             .transition(.opacity)
                             .onTapGesture {
                                 withAnimation(.easeOut(duration: 0.25)) {
-                                    showCustomResetModal = false
+                                    showResetConfirmModal = false
                                 }
                             }
                         
-                        // Custom glass popup modal box
+                        // Liquid Glass Alert Window
                         VStack(spacing: 20) {
                             Image(systemName: "exclamationmark.triangle.fill")
                                 .font(.system(size: 40))
                                 .foregroundColor(.red)
                                 .shadow(color: .red.opacity(0.4), radius: 8)
                             
-                            Text("警告：清空账本数据")
+                            Text("警告：确认清空账本")
                                 .font(.title3.bold())
                                 .foregroundColor(.white)
                             
-                            Text("您确定要清空所有的历史记账账单吗？此操作将彻底删除数据，且无法撤销。")
+                            Text("此操作将安全抹除 SwiftData 数据库中存储的全部记账流水，且该操作无法撤销。")
                                 .font(.subheadline)
                                 .foregroundColor(.white.opacity(0.7))
                                 .multilineTextAlignment(.center)
@@ -192,16 +229,16 @@ public struct SettingsView: View {
                             HStack(spacing: 16) {
                                 Button("取消") {
                                     withAnimation(.easeOut(duration: 0.25)) {
-                                        showCustomResetModal = false
+                                        showResetConfirmModal = false
                                     }
                                 }
-                                .buttonStyle(LiquidGlassButtonStyle()) // Styled with interactive touch specularity
+                                .buttonStyle(LiquidGlassButtonStyle())
                                 .frame(maxWidth: .infinity)
                                 
                                 Button("确认清空") {
-                                    clearLedgerData()
+                                    clearLedger()
                                     withAnimation(.easeOut(duration: 0.25)) {
-                                        showCustomResetModal = false
+                                        showResetConfirmModal = false
                                     }
                                 }
                                 .buttonStyle(LiquidGlassButtonStyle())
@@ -221,25 +258,146 @@ public struct SettingsView: View {
             .navigationTitle("系统设置")
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbarBackground(.hidden, for: .navigationBar)
-            .sheet(isPresented: $showCategoriesSheet) {
-                CategoriesListView()
-                    .presentationDetents([.medium, .large])
-                    .presentationDragIndicator(.visible)
-            }
         }
     }
     
-    private func startSync() {
-        isSyncing = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            isSyncing = false
-        }
-    }
-    
-    private func clearLedgerData() {
+    private func clearLedger() {
         for tx in transactions {
             modelContext.delete(tx)
         }
         try? modelContext.save()
+    }
+}
+
+// MARK: - Reusable settings row widget
+struct SettingsRow<Content: View>: View {
+    let icon: String
+    let iconColor: Color
+    let title: String
+    let content: Content
+    
+    init(icon: String, iconColor: Color, title: String, @ViewBuilder content: () -> Content) {
+        self.icon = icon
+        self.iconColor = iconColor
+        self.title = title
+        self.content = content()
+    }
+    
+    var body: some View {
+        HStack(spacing: 14) {
+            ZStack {
+                Circle()
+                    .fill(iconColor.opacity(0.15))
+                    .frame(width: 32, height: 32)
+                Image(systemName: icon)
+                    .foregroundColor(iconColor)
+                    .font(.system(size: 14, weight: .bold))
+            }
+            
+            Text(title)
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundColor(.white)
+            
+            Spacer()
+            
+            content
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .frame(height: 52)
+    }
+}
+
+// MARK: - Reusable nested row widget
+struct SettingsNestedRow<Content: View>: View {
+    let title: String
+    let content: Content
+    
+    init(title: String, @ViewBuilder content: () -> Content) {
+        self.title = title
+        self.content = content()
+    }
+    
+    var body: some View {
+        HStack {
+            Text(title)
+                .font(.system(size: 14))
+                .foregroundColor(.white.opacity(0.8))
+                .padding(.leading, 46)
+            
+            Spacer()
+            
+            content
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+        .frame(height: 46)
+    }
+}
+
+// MARK: - Hand-written 0.5px white glow partition divider
+struct CustomDivider: View {
+    var body: some View {
+        Rectangle()
+            .fill(Color.white.opacity(0.1))
+            .frame(height: 0.5)
+            .padding(.horizontal, 16)
+    }
+}
+
+// MARK: - Premium custom liquid toggle
+struct LiquidToggle: View {
+    @Binding var isOn: Bool
+    
+    var body: some View {
+        Button(action: {
+            withAnimation(.spring(response: 0.32, dampingFraction: 0.68)) {
+                isOn.toggle()
+            }
+        }) {
+            Capsule()
+                .fill(isOn ? Color.cyan.opacity(0.25) : Color.white.opacity(0.06))
+                .frame(width: 48, height: 28)
+                .overlay(
+                    Capsule()
+                        .stroke(isOn ? Color.cyan.opacity(0.6) : Color.white.opacity(0.12), lineWidth: 1.0)
+                )
+                .overlay(
+                    Circle()
+                        .fill(isOn ? Color.cyan : Color.white.opacity(0.6))
+                        .padding(3)
+                        .offset(x: isOn ? 10 : -10)
+                        .shadow(color: isOn ? Color.cyan.opacity(0.4) : .clear, radius: 4)
+                )
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+}
+
+// MARK: - Premium checkmark button
+struct SettingsCheckmark: View {
+    let isChecked: Bool
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            ZStack {
+                Circle()
+                    .fill(isChecked ? Color.cyan.opacity(0.18) : Color.white.opacity(0.04))
+                    .frame(width: 24, height: 24)
+                    .overlay(
+                        Circle()
+                            .stroke(isChecked ? Color.cyan : Color.white.opacity(0.15), lineWidth: 1.2)
+                    )
+                
+                if isChecked {
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundColor(.cyan)
+                        .transition(.scale.combined(with: .opacity))
+                }
+            }
+        }
+        .buttonStyle(PlainButtonStyle())
     }
 }
