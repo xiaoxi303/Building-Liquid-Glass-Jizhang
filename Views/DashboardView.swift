@@ -26,52 +26,54 @@ public struct DashboardView: View {
                 
                 ScrollView {
                     VStack(spacing: 24) {
-                        // 1. Air-like Premium Glass Balance Panel with Decompression Aurora Glow Flow
+                        // 1. Thick Glass Balance Panel with Decompression Aurora Glow Flow
                         ZStack {
-                            // Dynamic Shifting Aurora Gradients (shifts starting centers on drag)
+                            // Dynamic Shifting Aurora Gradients
                             RoundedRectangle(cornerRadius: 28, style: .continuous)
                                 .fill(Color.white.opacity(0.01))
                                 .background(
                                     ZStack {
-                                        Color(hex: "#0F172A").opacity(0.55) // Base material overlay
+                                        Color(hex: "#0F172A").opacity(0.4) // Semi-transparent overlay to increase refraction
                                         
                                         // Purple flow center
                                         RadialGradient(
-                                            colors: [Color.purple.opacity(0.32), .clear],
+                                            colors: [Color.purple.opacity(0.35), .clear],
                                             center: .init(
                                                 x: 0.35 + Double(glowOffset.width) / 1200.0,
                                                 y: 0.35 + Double(glowOffset.height) / 1200.0
                                             ),
                                             startRadius: 0,
-                                            endRadius: 190
+                                            endRadius: 200
                                         )
                                         
                                         // Cyan flow center
                                         RadialGradient(
-                                            colors: [Color.cyan.opacity(0.32), .clear],
+                                            colors: [Color.cyan.opacity(0.35), .clear],
                                             center: .init(
                                                 x: 0.65 - Double(glowOffset.width) / 1200.0,
                                                 y: 0.65 - Double(glowOffset.height) / 1200.0
                                             ),
                                             startRadius: 0,
-                                            endRadius: 190
+                                            endRadius: 200
                                         )
                                     }
                                 )
                             
-                            // Card Info Details
+                            // Card Info Details (Blends text into the glowing background)
                             VStack(spacing: 18) {
                                 Text("本月净资产 (Monthly Net Balance)")
-                                    .font(.system(size: 13, weight: .semibold))
+                                    .font(.system(size: 13, weight: .bold))
                                     .foregroundColor(.white.opacity(0.5))
-                                    .tracking(1)
+                                    .tracking(1.2)
+                                    .blendMode(.plusLighter) // Blends cleanly into glass
                                 
                                 let (income, expense, balance) = calculateMonthlyTotals()
                                 
                                 Text(String(format: "¥%.2f", balance))
-                                    .font(.system(size: 40, weight: .bold, design: .rounded))
+                                    .font(.system(size: 42, weight: .bold, design: .rounded))
                                     .foregroundColor(.white)
-                                    .shadow(color: .white.opacity(0.2), radius: 8)
+                                    .shadow(color: .cyan.opacity(0.3), radius: 10)
+                                    .blendMode(.plusLighter)
                                 
                                 HStack(spacing: 0) {
                                     VStack(alignment: .leading, spacing: 4) {
@@ -79,7 +81,7 @@ public struct DashboardView: View {
                                             Image(systemName: "arrow.down.circle.fill")
                                                 .foregroundColor(.green)
                                             Text("本月收入")
-                                                .font(.caption)
+                                                .font(.caption.bold())
                                                 .foregroundColor(.white.opacity(0.6))
                                         }
                                         Text(String(format: "¥%.2f", income))
@@ -87,9 +89,10 @@ public struct DashboardView: View {
                                             .foregroundColor(.white)
                                     }
                                     .frame(maxWidth: .infinity)
+                                    .blendMode(.plusLighter)
                                     
                                     Rectangle()
-                                        .fill(Color.white.opacity(0.15))
+                                        .fill(Color.white.opacity(0.18))
                                         .frame(width: 1, height: 32)
                                     
                                     VStack(alignment: .leading, spacing: 4) {
@@ -97,7 +100,7 @@ public struct DashboardView: View {
                                             Image(systemName: "arrow.up.circle.fill")
                                                 .foregroundColor(.red)
                                             Text("本月支出")
-                                                .font(.caption)
+                                                .font(.caption.bold())
                                                 .foregroundColor(.white.opacity(0.6))
                                         }
                                         Text(String(format: "¥%.2f", expense))
@@ -105,14 +108,15 @@ public struct DashboardView: View {
                                             .foregroundColor(.white)
                                     }
                                     .frame(maxWidth: .infinity)
+                                    .blendMode(.plusLighter)
                                 }
                             }
                             .padding(24)
                         }
-                        .liquidGlass(cornerRadius: 28, shadowRadius: 20, borderOpacity: 0.3)
+                        // Applies the premium 0.5px edge micro-glow and shadow refraction
+                        .liquidGlass(cornerRadius: 28, shadowRadius: 24, borderOpacity: 0.3)
                         .padding(.horizontal)
                         .padding(.top, 16)
-                        // Decompressing interactive scale response
                         .scaleEffect(1.0 - (abs(glowOffset.width) + abs(glowOffset.height)) / 8000.0)
                         .gesture(
                             DragGesture()
@@ -128,7 +132,7 @@ public struct DashboardView: View {
                                 }
                         )
                         
-                        // 2. Transactions List Section
+                        // 2. Transactions List Section (Thin glass overlapping slices)
                         VStack(alignment: .leading, spacing: 16) {
                             Text("最近账单 (Transactions)")
                                 .font(.title3.bold())
@@ -149,13 +153,14 @@ public struct DashboardView: View {
                                 .liquidGlass(cornerRadius: 20, shadowRadius: 10, borderOpacity: 0.15)
                                 .padding(.horizontal)
                             } else {
-                                LazyVStack(spacing: 12) {
+                                // Laying out list items with slight overlapping/thin glass feel
+                                LazyVStack(spacing: -8) { // Slight negative spacing to overlap glass slices
                                     ForEach(transactions) { transaction in
                                         HStack(spacing: 16) {
                                             let catColor = Color(hex: transaction.category?.hexColor ?? "#8E8E93")
                                             ZStack {
                                                 Circle()
-                                                    .fill(catColor.opacity(0.15))
+                                                    .fill(catColor.opacity(0.12))
                                                     .frame(width: 44, height: 44)
                                                 Image(systemName: transaction.category?.icon ?? "square.grid.2x2.fill")
                                                     .foregroundColor(catColor)
@@ -186,7 +191,9 @@ public struct DashboardView: View {
                                             }
                                         }
                                         .padding()
-                                        .liquidGlass(cornerRadius: 16, shadowRadius: 8, borderOpacity: 0.2)
+                                        // Very thin glass slice styling
+                                        .liquidGlass(cornerRadius: 16, shadowRadius: 12, borderOpacity: 0.18)
+                                        .padding(.horizontal)
                                         .contextMenu {
                                             Button(role: .destructive) {
                                                 modelContext.delete(transaction)
@@ -196,7 +203,6 @@ public struct DashboardView: View {
                                         }
                                     }
                                 }
-                                .padding(.horizontal)
                                 .padding(.bottom, 120)
                             }
                         }
@@ -208,7 +214,6 @@ public struct DashboardView: View {
                     showAddTransactionSheet = true
                 }) {
                     ZStack {
-                        // Infinite breathing outer halo
                         Circle()
                             .stroke(Color.cyan.opacity(0.45), lineWidth: 1.5)
                             .frame(width: 76, height: 76)
@@ -235,7 +240,6 @@ public struct DashboardView: View {
                 .padding(.bottom, 110)
                 .buttonStyle(ShrinkButtonStyle())
                 .onAppear {
-                    // Start repeating breathing animation
                     withAnimation(.easeInOut(duration: 2.0).repeatForever(autoreverses: false)) {
                         isBreathing = true
                     }

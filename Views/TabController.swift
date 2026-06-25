@@ -26,7 +26,7 @@ public enum Tab: String, CaseIterable, Identifiable {
 }
 
 /// The root UI container of the application.
-/// Houses the upgraded custom floating Liquid Glass TabBar with liquid stretching animations.
+/// Houses the custom floating Liquid Glass TabBar with liquid water-droplet metaball transitions.
 public struct TabController: View {
     @State private var selectedTab: Tab = .detail
     @Namespace private var tabBarNamespace
@@ -46,7 +46,7 @@ public struct TabController: View {
                 )
                 .ignoresSafeArea()
                 
-                // 2. Main screen view content
+                // 2. Main screen view content (bleeds to screen edges)
                 Group {
                     switch selectedTab {
                     case .detail:
@@ -64,70 +64,78 @@ public struct TabController: View {
                 VStack {
                     Spacer()
                     
-                    HStack(spacing: 0) {
-                        ForEach(Tab.allCases) { tab in
-                            Button(action: {
-                                // Specific low damping spring for fluid, bouncy water droplet merging effect
-                                withAnimation(.spring(response: 0.35, dampingFraction: 0.68, blendDuration: 0)) {
-                                    selectedTab = tab
+                    ZStack {
+                        // Background: Liquid Metaball Layer (isolated from icons to prevent text distortion)
+                        ZStack {
+                            // Small static water guide dots
+                            HStack(spacing: 0) {
+                                ForEach(Tab.allCases) { tab in
+                                    Circle()
+                                        .fill(Color.cyan.opacity(0.65))
+                                        .frame(width: 12, height: 12)
+                                        .frame(maxWidth: .infinity)
                                 }
-                            }) {
-                                VStack(spacing: 6) {
-                                    Image(systemName: tab.icon)
-                                        .font(.system(size: 20, weight: .semibold))
-                                        .foregroundColor(selectedTab == tab ? .cyan : .white.opacity(0.4))
-                                        .frame(height: 24)
-                                    
-                                    Text(tab.title)
-                                        .font(.system(size: 11, weight: .bold))
-                                        .foregroundColor(selectedTab == tab ? .cyan : .white.opacity(0.4))
-                                }
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 10)
-                                .contentShape(Rectangle())
-                                .background(
-                                    ZStack {
+                            }
+                            .padding(.horizontal, 10)
+                            
+                            // Sliding active capsule indicator
+                            HStack(spacing: 0) {
+                                ForEach(Tab.allCases) { tab in
+                                    Group {
                                         if selectedTab == tab {
-                                            // Water-droplet capsule background highlight
                                             Capsule()
-                                                .fill(
-                                                    LinearGradient(
-                                                        colors: [Color.cyan.opacity(0.18), Color.blue.opacity(0.08)],
-                                                        startPoint: .topLeading,
-                                                        endPoint: .bottomTrailing
-                                                    )
-                                                )
+                                                .fill(Color.cyan)
                                                 .matchedGeometryEffect(id: "liquidBubble", in: tabBarNamespace)
-                                                .overlay(
-                                                    Capsule()
-                                                        .stroke(
-                                                            LinearGradient(
-                                                                colors: [.cyan.opacity(0.45), .blue.opacity(0.15)],
-                                                                startPoint: .top,
-                                                                endPoint: .bottom
-                                                            ),
-                                                            lineWidth: 1.2
-                                                        )
-                                                        .matchedGeometryEffect(id: "liquidBubbleBorder", in: tabBarNamespace)
-                                                )
-                                                // Outer shadow to make the fluid droplet feel raised
-                                                .shadow(color: Color.cyan.opacity(0.25), radius: 6, x: 0, y: 2)
+                                                .frame(width: 58, height: 32)
                                                 .padding(.horizontal, 6)
-                                                .padding(.vertical, 2)
+                                        } else {
+                                            Color.clear
+                                                .frame(width: 58, height: 32)
+                                                .padding(.horizontal, 6)
                                         }
                                     }
-                                )
+                                    .frame(maxWidth: .infinity)
+                                }
                             }
-                            .buttonStyle(PlainButtonStyle())
+                            .padding(.horizontal, 10)
                         }
+                        .blur(radius: 7.5) // Induces fluid color bleeding
+                        .contrast(14.0)    // High contrast snaps bleeding boundaries into sharp organic water droplets
+                        .frame(height: 52)
+                        
+                        // Foreground: Tab Icons & Text Buttons (rendered clear on top of the indicators)
+                        HStack(spacing: 0) {
+                            ForEach(Tab.allCases) { tab in
+                                Button(action: {
+                                    // Custom spring for the water bubble stretch-and-snap interaction
+                                    withAnimation(.spring(response: 0.35, dampingFraction: 0.68, blendDuration: 0)) {
+                                        selectedTab = tab
+                                    }
+                                }) {
+                                    VStack(spacing: 5) {
+                                        Image(systemName: tab.icon)
+                                            .font(.system(size: 20, weight: .semibold))
+                                            .foregroundColor(selectedTab == tab ? .cyan : .white.opacity(0.4))
+                                            .frame(height: 24)
+                                        
+                                        Text(tab.title)
+                                            .font(.system(size: 11, weight: .bold))
+                                            .foregroundColor(selectedTab == tab ? .cyan : .white.opacity(0.4))
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 10)
+                                    .contentShape(Rectangle())
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            }
+                        }
+                        .padding(.horizontal, 10)
                     }
-                    .padding(.horizontal, 12)
                     .padding(.vertical, 8)
                     // High refraction liquid glass capsule container
                     .liquidGlass(cornerRadius: 32, shadowRadius: 24, borderOpacity: 0.35)
-                    // Inset from sides to look floating
                     .padding(.horizontal, 24)
-                    // Dynamic padding so it floats perfectly above home bar or flat screen edge
+                    // Dynamic padding to float cleanly above home bar or flat screen edge
                     .padding(.bottom, safeAreaBottom > 0 ? safeAreaBottom : 12)
                 }
             }

@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 /// Modal View sheet allowing the user to record an income or expense transaction.
-/// Features a liquid material card design, horizontal scroll picker, and tactile button controls.
+/// Features a liquid material card design, category bubbles with water-ripple feedback, and a liquid glass button.
 public struct AddTransactionView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
@@ -15,7 +15,11 @@ public struct AddTransactionView: View {
     @State private var date = Date()
     @State private var note = ""
     
-    // Namespace for matched geometry tab switching animations
+    // Ripple trigger states for category circles
+    @State private var rippleCategoryId: UUID? = nil
+    @State private var rippleScale: CGFloat = 1.0
+    @State private var rippleOpacity: Double = 0.0
+    
     @Namespace private var segmentNamespace
     
     public init() {}
@@ -101,7 +105,7 @@ public struct AddTransactionView: View {
                         .liquidGlass(cornerRadius: 20, shadowRadius: 10, borderOpacity: 0.2)
                         .padding(.horizontal)
                         
-                        // 3. Category Horizontal Slider Selector
+                        // 3. Category Horizontal Slider Selector with Water-Ripple expansion Feedback
                         VStack(alignment: .leading, spacing: 12) {
                             Text("选择分类")
                                 .font(.caption.bold())
@@ -123,12 +127,30 @@ public struct AddTransactionView: View {
                                         let catColor = Color(hex: category.hexColor)
                                         
                                         Button(action: {
+                                            // Trigger Ripple Expansion
+                                            rippleCategoryId = category.id
+                                            rippleScale = 1.0
+                                            rippleOpacity = 0.8
+                                            
+                                            withAnimation(.easeOut(duration: 0.45)) {
+                                                rippleScale = 1.45
+                                                rippleOpacity = 0.0
+                                            }
+                                            
                                             withAnimation(.spring(response: 0.25, dampingFraction: 0.70)) {
                                                 selectedCategory = category
                                             }
                                         }) {
                                             VStack(spacing: 8) {
                                                 ZStack {
+                                                    // Water-Ripple Effect Ring
+                                                    if rippleCategoryId == category.id {
+                                                        Circle()
+                                                            .stroke(catColor.opacity(rippleOpacity), lineWidth: 2.5)
+                                                            .frame(width: 58, height: 58)
+                                                            .scaleEffect(rippleScale)
+                                                    }
+                                                    
                                                     Circle()
                                                         .fill(isSelected ? catColor.opacity(0.2) : Color.white.opacity(0.04))
                                                         .frame(width: 58, height: 58)
@@ -162,7 +184,7 @@ public struct AddTransactionView: View {
                                     }
                                 }
                                 .padding(.horizontal)
-                                .padding(.vertical, 6)
+                                .padding(.vertical, 10) // Give space for ripple scaling
                             }
                         }
                         
@@ -180,7 +202,7 @@ public struct AddTransactionView: View {
                                         .foregroundColor(.white)
                                 }
                             }
-                            .colorScheme(.dark) // Lock date picker selection menus in dark theme
+                            .colorScheme(.dark)
                             
                             Divider().background(Color.white.opacity(0.12))
                             
@@ -205,26 +227,17 @@ public struct AddTransactionView: View {
                         .liquidGlass(cornerRadius: 20, shadowRadius: 12, borderOpacity: 0.2)
                         .padding(.horizontal)
                         
-                        // 5. Spring Scale Save CTA Button
+                        // 5. Upgraded Specular Liquid Glass Save Button
                         Button(action: saveTransaction) {
                             Text("确认保存")
                                 .font(.system(size: 16, weight: .bold))
                                 .foregroundColor(.white)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 16)
-                                .background(
-                                    LinearGradient(
-                                        colors: [Color.cyan, Color.blue],
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
-                                )
-                                .clipShape(Capsule())
-                                .shadow(color: Color.cyan.opacity(0.4), radius: 10, y: 4)
                         }
+                        .buttonStyle(LiquidGlassButtonStyle()) // Styled with dynamic specular highlight tracker
                         .padding(.horizontal)
                         .padding(.top, 12)
-                        .buttonStyle(ShrinkButtonStyle())
                         .disabled(amountString.isEmpty || Double(amountString) == nil || selectedCategory == nil)
                         .opacity((amountString.isEmpty || Double(amountString) == nil || selectedCategory == nil) ? 0.45 : 1.0)
                     }
