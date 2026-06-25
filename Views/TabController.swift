@@ -65,50 +65,50 @@ public struct TabController: View {
                     Spacer()
                     
                     ZStack {
-                        // Background: Liquid Metaball Layer (isolated from icons to prevent text distortion)
-                        ZStack {
-                            // Small static water guide dots
-                            HStack(spacing: 0) {
-                                ForEach(Tab.allCases) { tab in
-                                    Circle()
-                                        .fill(Color.cyan.opacity(0.65))
-                                        .frame(width: 12, height: 12)
-                                        .frame(maxWidth: .infinity)
-                                }
-                            }
-                            .padding(.horizontal, 10)
-                            
-                            // Sliding active capsule indicator
-                            HStack(spacing: 0) {
-                                ForEach(Tab.allCases) { tab in
-                                    Group {
-                                        if selectedTab == tab {
-                                            Capsule()
-                                                .fill(Color.cyan)
-                                                .matchedGeometryEffect(id: "liquidBubble", in: tabBarNamespace)
-                                                .frame(width: 58, height: 32)
-                                                .padding(.horizontal, 6)
-                                        } else {
-                                            Color.clear
-                                                .frame(width: 58, height: 32)
-                                                .padding(.horizontal, 6)
-                                        }
+                        // Background: Liquid Metaball Layer (uses LiquidFusionView)
+                        LiquidFusionView(blurRadius: 10, contrastThreshold: 16) {
+                            ZStack {
+                                // Small static guide dots
+                                HStack(spacing: 0) {
+                                    ForEach(Tab.allCases) { tab in
+                                        Circle()
+                                            .fill(Color.cyan.opacity(0.7))
+                                            .frame(width: 14, height: 14)
+                                            .frame(maxWidth: .infinity)
                                     }
-                                    .frame(maxWidth: .infinity)
                                 }
+                                .padding(.horizontal, 10)
+                                
+                                // Sliding active capsule indicator (interpolates position)
+                                HStack(spacing: 0) {
+                                    ForEach(Tab.allCases) { tab in
+                                        Group {
+                                            if selectedTab == tab {
+                                                Capsule()
+                                                    .fill(Color.cyan)
+                                                    .matchedGeometryEffect(id: "liquidBubble", in: tabBarNamespace)
+                                                    .frame(width: 58, height: 32)
+                                                    .padding(.horizontal, 6)
+                                            } else {
+                                                Color.clear
+                                                    .frame(width: 58, height: 32)
+                                                    .padding(.horizontal, 6)
+                                            }
+                                        }
+                                        .frame(maxWidth: .infinity)
+                                    }
+                                }
+                                .padding(.horizontal, 10)
                             }
-                            .padding(.horizontal, 10)
                         }
-                        .blur(radius: 7.5) // Induces fluid color bleeding
-                        .contrast(14.0)    // High contrast snaps bleeding boundaries into sharp organic water droplets
                         .frame(height: 52)
                         
                         // Foreground: Tab Icons & Text Buttons (rendered clear on top of the indicators)
                         HStack(spacing: 0) {
                             ForEach(Tab.allCases) { tab in
                                 Button(action: {
-                                    // Custom spring for the water bubble stretch-and-snap interaction
-                                    withAnimation(.spring(response: 0.35, dampingFraction: 0.68, blendDuration: 0)) {
+                                    // Custom spring for the water bubble stretch-and-snap interaction matching video details
+                                    withAnimation(.spring(response: 0.40, dampingFraction: 0.70, blendDuration: 0)) {
                                         selectedTab = tab
                                     }
                                 }) {
@@ -134,6 +134,8 @@ public struct TabController: View {
                     .padding(.vertical, 8)
                     // High refraction liquid glass capsule container
                     .liquidGlass(cornerRadius: 32, shadowRadius: 24, borderOpacity: 0.35)
+                    // Apply chromatic aberration edge glow overlay to simulate glass color dispersion
+                    .chromaticEdgeGlow(cornerRadius: 32, lineWidth: 1.0, opacity: 0.25)
                     .padding(.horizontal, 24)
                     // Dynamic padding to float cleanly above home bar or flat screen edge
                     .padding(.bottom, safeAreaBottom > 0 ? safeAreaBottom : 12)
