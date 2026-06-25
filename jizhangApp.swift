@@ -11,7 +11,8 @@ struct jizhangApp: App {
             // Configure schema and storage for Categories and Transactions
             let schema = Schema([
                 Category.self,
-                Transaction.self
+                Transaction.self,
+                Card.self
             ])
             let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
             
@@ -23,8 +24,9 @@ struct jizhangApp: App {
             Task { @MainActor in
                 do {
                     try await Self.seedDefaultCategoriesIfNeeded(context: container.mainContext)
+                    try await Self.seedDefaultCardsIfNeeded(context: container.mainContext)
                 } catch {
-                    print("Failed to seed default categories: \(error.localizedDescription)")
+                    print("Failed to seed database: \(error.localizedDescription)")
                 }
             }
         } catch {
@@ -70,5 +72,30 @@ struct jizhangApp: App {
         // Persist database changes
         try context.save()
         print("Successfully seeded default categories in SwiftData database.")
+    }
+    
+    /// Seeds three classic credit cards (Visa, Mastercard, Amex) if the wallet is empty.
+    @MainActor
+    private static func seedDefaultCardsIfNeeded(context: ModelContext) async throws {
+        var descriptor = FetchDescriptor<Card>()
+        descriptor.fetchLimit = 1
+        
+        let existingCards = try context.fetch(descriptor)
+        guard existingCards.isEmpty else {
+            return
+        }
+        
+        let defaultCards = [
+            Card(holderName: "John Appleseed", cardNumber: "4000 1234 5678 9010", expiryDate: "12/28"),
+            Card(holderName: "John Appleseed", cardNumber: "5200 9876 5432 1098", expiryDate: "09/30"),
+            Card(holderName: "John Appleseed", cardNumber: "3700 1111 2222 3333", expiryDate: "05/29")
+        ]
+        
+        for card in defaultCards {
+            context.insert(card)
+        }
+        
+        try context.save()
+        print("Successfully seeded default credit cards in SwiftData database.")
     }
 }

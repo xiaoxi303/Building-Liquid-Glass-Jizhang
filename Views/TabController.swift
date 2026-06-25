@@ -1,9 +1,10 @@
 import SwiftUI
 
-/// Tab categories for navigation
+/// Tab categories for navigation (Upgraded to 4 cases including Wallet)
 public enum Tab: String, CaseIterable, Identifiable {
     case detail
     case analytics
+    case wallet
     case settings
     
     public var id: String { self.rawValue }
@@ -12,6 +13,7 @@ public enum Tab: String, CaseIterable, Identifiable {
         switch self {
         case .detail: return "doc.text.fill"
         case .analytics: return "chart.bar.xaxis"
+        case .wallet: return "creditcard.fill"
         case .settings: return "gearshape.fill"
         }
     }
@@ -20,6 +22,7 @@ public enum Tab: String, CaseIterable, Identifiable {
         switch self {
         case .detail: return "明细"
         case .analytics: return "统计"
+        case .wallet: return "钱包"
         case .settings: return "设置"
         }
     }
@@ -56,6 +59,8 @@ public struct TabController: View {
                         DashboardView()
                     case .analytics:
                         AnalyticsView()
+                    case .wallet:
+                        WalletView()
                     case .settings:
                         SettingsView()
                     }

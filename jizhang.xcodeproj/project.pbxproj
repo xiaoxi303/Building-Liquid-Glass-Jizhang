@@ -18,6 +18,9 @@
 		2D00003B2D00003B2D00003B /* LiquidFusionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D00002B2D00002B2D00002B /* LiquidFusionView.swift */; };
 		2D00003C2D00003C2D00003C /* AnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D00002C2D00002C2D00002C /* AnalyticsView.swift */; };
 		2D00003D2D00003D2D00003D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D00002D2D00002D2D00002D /* SettingsView.swift */; };
+		2D00003E2D00003E2D00003E /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D00002E2D00002E2D00002E /* Card.swift */; };
+		2D00003F2D00003F2D00003F /* WalletView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D00002F2D00002F2D00002F /* WalletView.swift */; };
+		2D0000502D0000502D000050 /* AddCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0000402D0000402D000040 /* AddCardView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +37,9 @@
 		2D00002B2D00002B2D00002B /* LiquidFusionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidFusionView.swift; sourceTree = "<group>"; };
 		2D00002C2D00002C2D00002C /* AnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsView.swift; sourceTree = "<group>"; };
 		2D00002D2D00002D2D00002D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		2D00002E2D00002E2D00002E /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
+		2D00002F2D00002F2D00002F /* WalletView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletView.swift; sourceTree = "<group>"; };
+		2D0000402D0000402D000040 /* AddCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +69,7 @@
 			children = (
 				2D0000222D0000222D000022 /* Category.swift */,
 				2D0000232D0000232D000023 /* Transaction.swift */,
+				2D00002E2D00002E2D00002E /* Card.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -76,6 +83,8 @@
 				2D0000252D0000252D000025 /* DashboardView.swift */,
 				2D0000262D0000262D000026 /* PlaceholderViews.swift */,
 				2D0000272D0000272D000027 /* TabController.swift */,
+				2D00002F2D00002F2D00002F /* WalletView.swift */,
+				2D0000402D0000402D000040 /* AddCardView.swift */,
 				2D00000C2D00000C2D00000E /* Components */,
 			);
 			path = Views;
@@ -178,6 +187,9 @@
 				2D00003B2D00003B2D00003B /* LiquidFusionView.swift in Sources */,
 				2D00003C2D00003C2D00003C /* AnalyticsView.swift in Sources */,
 				2D00003D2D00003D2D00003D /* SettingsView.swift in Sources */,
+				2D00003E2D00003E2D00003E /* Card.swift in Sources */,
+				2D00003F2D00003F2D00003F /* WalletView.swift in Sources */,
+				2D0000502D0000502D000050 /* AddCardView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
