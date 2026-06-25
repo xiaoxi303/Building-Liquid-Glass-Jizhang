@@ -22,11 +22,9 @@ jobs:
           xcodebuild -version
 
       - name: Run xcodebuild archive and package IPA
-        working-directory: jizhang # Set working directory to the subfolder where the Xcode project lives
         run: |
-          # 1. 执行正式的 Archive 归档（这样 Xcode 会生成完整的 App 结构，包含 Info.plist）
+          # 1. 执行正式的 Archive 归档（在根目录下执行，自动搜索项目文件）
           xcodebuild archive \
-            -project ./jizhang.xcodeproj \
             -scheme jizhang \
             -configuration Release \
             -sdk iphoneos \
@@ -42,12 +40,12 @@ jobs:
           # 3. 把编译出来的干净 .app 复制到 Payload 文件夹中
           cp -r build/jizhang.xcarchive/Products/Applications/jizhang.app Payload/
 
-          # 4. 用 zip 命令压缩成可以导入全能签的纯净 .ipa 文件，输出到仓库根目录
-          zip -r ../jizhang.ipa Payload
+          # 4. 用 zip 命令压缩成可以导入全能签的纯净 .ipa 文件
+          zip -r jizhang.ipa Payload
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
           name: jizhang-pure-ipa
-          path: jizhang.ipa # Uploads the jizhang.ipa located at the repository root
+          path: jizhang.ipa # Uploads the jizhang.ipa from the repository root
           if-no-files-found: error
