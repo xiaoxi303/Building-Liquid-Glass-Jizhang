@@ -21,17 +21,8 @@ jobs:
           sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
           xcodebuild -version
 
-      - name: Install XcodeGen
-        # Installs XcodeGen via Homebrew to handle dynamic xcodeproj creation
-        run: |
-          brew install xcodegen
-
-      - name: Generate Xcode Project
-        # Generates the jizhang.xcodeproj dynamically based on project.yml specification
-        run: |
-          xcodegen generate
-
       - name: Build Unsigned App
+        working-directory: jizhang # Set working directory to the subfolder where .xcodeproj is located
         run: |
           xcodebuild build \
             -scheme jizhang \
@@ -44,6 +35,7 @@ jobs:
             PROVISIONING_PROFILE=""
 
       - name: Package App into IPA
+        working-directory: jizhang # Set working directory to the subfolder to find build products
         run: |
           # 1. Create Payload folder structure
           mkdir -p Payload
@@ -51,12 +43,12 @@ jobs:
           # 2. Copy the compiled .app bundle into Payload
           cp -r build/Build/Products/Release-iphoneos/jizhang.app Payload/
           
-          # 3. Zip the Payload folder to create the unsigned IPA
-          zip -r jizhang.ipa Payload
+          # 3. Zip the Payload folder, outputting jizhang.ipa to the parent (root) folder
+          zip -r ../jizhang.ipa Payload
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
           name: jizhang-unsigned-IPA
-          path: jizhang.ipa
+          path: jizhang.ipa # Uploads the jizhang.ipa from the repository root
           if-no-files-found: error
