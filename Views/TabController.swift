@@ -26,8 +26,7 @@ public enum Tab: String, CaseIterable, Identifiable {
 }
 
 /// The root UI container of the application.
-/// Houses the custom floating Liquid Glass TabBar and routes to DashboardView, AnalyticsView, and SettingsView.
-/// Solves safe area bleeding for full screen displays and floats above the Home indicator.
+/// Houses the upgraded custom floating Liquid Glass TabBar with liquid stretching animations.
 public struct TabController: View {
     @State private var selectedTab: Tab = .detail
     @Namespace private var tabBarNamespace
@@ -36,7 +35,6 @@ public struct TabController: View {
     
     public var body: some View {
         GeometryReader { geometry in
-            // Read safe area bottom padding (e.g., Home indicator area height)
             let safeAreaBottom = geometry.safeAreaInsets.bottom
             
             ZStack(alignment: .bottom) {
@@ -48,7 +46,7 @@ public struct TabController: View {
                 )
                 .ignoresSafeArea()
                 
-                // 2. Content View Router (ignores safe area to allow scroll views to bleed to edge)
+                // 2. Main screen view content
                 Group {
                     switch selectedTab {
                     case .detail:
@@ -62,15 +60,15 @@ public struct TabController: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .ignoresSafeArea(.all)
                 
-                // 3. Floating Capsule Liquid Glass TabBar
+                // 3. Upgraded Liquid Water Droplet Capsule TabBar
                 VStack {
                     Spacer()
                     
                     HStack(spacing: 0) {
                         ForEach(Tab.allCases) { tab in
                             Button(action: {
-                                // High-grade spring physics for bubble transfer
-                                withAnimation(.spring(response: 0.38, dampingFraction: 0.76, blendDuration: 0)) {
+                                // Specific low damping spring for fluid, bouncy water droplet merging effect
+                                withAnimation(.spring(response: 0.35, dampingFraction: 0.68, blendDuration: 0)) {
                                     selectedTab = tab
                                 }
                             }) {
@@ -86,27 +84,35 @@ public struct TabController: View {
                                 }
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 10)
-                                .contentShape(Rectangle()) // Expand interactive tap target area
+                                .contentShape(Rectangle())
                                 .background(
                                     ZStack {
                                         if selectedTab == tab {
-                                            // Sliding capsule liquid highlight bubble
+                                            // Water-droplet capsule background highlight
                                             Capsule()
-                                                .fill(Color.cyan.opacity(0.12))
+                                                .fill(
+                                                    LinearGradient(
+                                                        colors: [Color.cyan.opacity(0.18), Color.blue.opacity(0.08)],
+                                                        startPoint: .topLeading,
+                                                        endPoint: .bottomTrailing
+                                                    )
+                                                )
                                                 .matchedGeometryEffect(id: "liquidBubble", in: tabBarNamespace)
                                                 .overlay(
                                                     Capsule()
                                                         .stroke(
                                                             LinearGradient(
-                                                                colors: [.cyan.opacity(0.4), .cyan.opacity(0.1)],
+                                                                colors: [.cyan.opacity(0.45), .blue.opacity(0.15)],
                                                                 startPoint: .top,
                                                                 endPoint: .bottom
                                                             ),
-                                                            lineWidth: 1
+                                                            lineWidth: 1.2
                                                         )
                                                         .matchedGeometryEffect(id: "liquidBubbleBorder", in: tabBarNamespace)
                                                 )
-                                                .padding(.horizontal, 8)
+                                                // Outer shadow to make the fluid droplet feel raised
+                                                .shadow(color: Color.cyan.opacity(0.25), radius: 6, x: 0, y: 2)
+                                                .padding(.horizontal, 6)
                                                 .padding(.vertical, 2)
                                         }
                                     }
@@ -115,17 +121,17 @@ public struct TabController: View {
                             .buttonStyle(PlainButtonStyle())
                         }
                     }
-                    .padding(.horizontal, 10)
+                    .padding(.horizontal, 12)
                     .padding(.vertical, 8)
-                    // Apply visual refraction styling
-                    .liquidGlass(cornerRadius: 32, shadowRadius: 24, borderOpacity: 0.3)
-                    // Float spacing: horizontal capsule shape inset
+                    // High refraction liquid glass capsule container
+                    .liquidGlass(cornerRadius: 32, shadowRadius: 24, borderOpacity: 0.35)
+                    // Inset from sides to look floating
                     .padding(.horizontal, 24)
-                    // Dynamic bottom gap to float cleanly above home indicator (or default to 12 on flat screens)
+                    // Dynamic padding so it floats perfectly above home bar or flat screen edge
                     .padding(.bottom, safeAreaBottom > 0 ? safeAreaBottom : 12)
                 }
             }
-            .ignoresSafeArea(.all, edges: .all) // Root ZStack ignores all safe areas
+            .ignoresSafeArea(.all, edges: .all)
         }
     }
 }
