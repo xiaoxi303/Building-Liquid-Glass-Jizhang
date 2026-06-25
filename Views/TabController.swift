@@ -72,7 +72,7 @@ public struct TabController: View {
                 ZStack {
                     // LAYER 1 (BOTTOM): Glass Outer Capsule Shell
                     Capsule()
-                        .fill(Color.clear.background(.ultraThinMaterial))
+                        .fill(.ultraThinMaterial)
                         .overlay(
                             Capsule()
                                 .stroke(
