@@ -1,0 +1,52 @@
+name: iOS Build Unsigned IPA
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  build:
+    name: Build Unsigned IPA
+    runs-on: macos-15 # Runner with Xcode 16/26 tools
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Xcode Version
+        run: |
+          sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+          xcodebuild -version
+
+      - name: Build Unsigned App
+        run: |
+          xcodebuild build \
+            -scheme jizhang \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            PROVISIONING_PROFILE=""
+
+      - name: Package App into IPA
+        run: |
+          # 1. Create Payload folder structure
+          mkdir -p Payload
+          
+          # 2. Copy the compiled .app bundle into Payload
+          cp -r build/Build/Products/Release-iphoneos/jizhang.app Payload/
+          
+          # 3. Zip the Payload folder to create the unsigned IPA
+          zip -r jizhang.ipa Payload
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: jizhang-unsigned-IPA
+          path: jizhang.ipa
+          if-no-files-found: error

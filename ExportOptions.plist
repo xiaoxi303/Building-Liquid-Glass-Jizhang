@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Method of distribution: development, ad-hoc, app-store, or enterprise -->
+    <key>method</key>
+    <string>development</string>
+    
+    <!-- Use manual signing configuration in CI/CD pipeline -->
+    <key>signingStyle</key>
+    <string>manual</string>
+    
+    <!-- Provisioning profile mapping (Bundle Identifier -> Profile Name/UUID) -->
+    <key>provisioningProfiles</key>
+    <dict>
+        <key>com.apple.jizhang</key>
+        <string>jizhang_provisioning_profile</string>
+    </dict>
+    
+    <key>destination</key>
+    <string>export</string>
+    
+    <!-- Bitcode is deprecated, disable it -->
+    <key>compileBitcode</key>
+    <false/>
+    
+    <!-- Set thinning options (none for universal IPA package) -->
+    <key>thinning</key>
+    <string>&lt;none&gt;</string>
+</dict>
+</plist>
