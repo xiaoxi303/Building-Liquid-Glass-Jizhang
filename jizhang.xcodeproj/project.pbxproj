@@ -48,7 +48,6 @@
 				2D0000082D0000082D000008 /* Views */,
 				2D0000092D0000092D000009 /* Products */,
 			);
-			path = ..;
 			sourceTree = "<group>";
 		};
 		2D0000072D0000072D000007 /* Models */ = {
