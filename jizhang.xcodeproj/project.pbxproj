@@ -16,6 +16,8 @@
 		2D0000372D0000372D000037 /* TabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0000272D0000272D000027 /* TabController.swift */; };
 		2D0000382D0000382D000038 /* AddTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0000282D0000282D000028 /* AddTransactionView.swift */; };
 		2D00003B2D00003B2D00003B /* LiquidFusionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D00002B2D00002B2D00002B /* LiquidFusionView.swift */; };
+		2D00003C2D00003C2D00003C /* AnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D00002C2D00002C2D00002C /* AnalyticsView.swift */; };
+		2D00003D2D00003D2D00003D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D00002D2D00002D2D00002D /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,8 @@
 		2D0000282D0000282D000028 /* AddTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionView.swift; sourceTree = "<group>"; };
 		2D00002A2D00002A2D00002A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2D00002B2D00002B2D00002B /* LiquidFusionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidFusionView.swift; sourceTree = "<group>"; };
+		2D00002C2D00002C2D00002C /* AnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsView.swift; sourceTree = "<group>"; };
+		2D00002D2D00002D2D00002D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +71,8 @@
 			isa = PBXGroup;
 			children = (
 				2D0000282D0000282D000028 /* AddTransactionView.swift */,
+				2D00002C2D00002C2D00002C /* AnalyticsView.swift */,
+				2D00002D2D00002D2D00002D /* SettingsView.swift */,
 				2D0000252D0000252D000025 /* DashboardView.swift */,
 				2D0000262D0000262D000026 /* PlaceholderViews.swift */,
 				2D0000272D0000272D000027 /* TabController.swift */,
@@ -170,6 +176,8 @@
 				2D0000372D0000372D000037 /* TabController.swift in Sources */,
 				2D0000382D0000382D000038 /* AddTransactionView.swift in Sources */,
 				2D00003B2D00003B2D00003B /* LiquidFusionView.swift in Sources */,
+				2D00003C2D00003C2D00003C /* AnalyticsView.swift in Sources */,
+				2D00003D2D00003D2D00003D /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

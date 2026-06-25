@@ -18,7 +18,6 @@ public struct LiquidFusionView<Content: View>: View {
     }
     
     public var body: some View {
-        // High contrast snaps the color bleeding margins of blurred shapes into sharp, organic fluid boundaries
         content
             .blur(radius: blurRadius)
             .contrast(contrastThreshold)
@@ -27,10 +26,14 @@ public struct LiquidFusionView<Content: View>: View {
 
 /// A View modifier that simulates a chromatic aberration (棱镜折射色散) edge glow on glass margins
 /// by overlaying three sub-pixel offset sub-RGB strokes.
+/// Syncs with global @AppStorage toggle to enable/disable the effect dynamically.
 public struct ChromaticAberrationEdgeGlow: ViewModifier {
     public var cornerRadius: CGFloat
     public var lineWidth: CGFloat
     public var opacity: Double
+    
+    // Global customizable Chromatic Aberration toggle (AppStorage synced)
+    @AppStorage("chromaticGlowEnabled") private var chromaticGlowEnabled: Bool = true
     
     public init(cornerRadius: CGFloat = 32, lineWidth: CGFloat = 1.0, opacity: Double = 0.35) {
         self.cornerRadius = cornerRadius
@@ -39,28 +42,32 @@ public struct ChromaticAberrationEdgeGlow: ViewModifier {
     }
     
     public func body(content: Content) -> some View {
-        content
-            .overlay(
-                ZStack {
-                    // 1. Red dispersion (offset top-left)
-                    RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                        .stroke(Color.red.opacity(opacity), lineWidth: lineWidth)
-                        .offset(x: -0.6, y: -0.4)
-                        .blendMode(.plusLighter)
-                    
-                    // 2. Green dispersion (offset center-bottom)
-                    RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                        .stroke(Color.green.opacity(opacity * 0.9), lineWidth: lineWidth)
-                        .offset(x: 0, y: 0.3)
-                        .blendMode(.plusLighter)
-                    
-                    // 3. Blue dispersion (offset bottom-right)
-                    RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                        .stroke(Color.blue.opacity(opacity), lineWidth: lineWidth)
-                        .offset(x: 0.6, y: 0.4)
-                        .blendMode(.plusLighter)
-                }
-            )
+        if chromaticGlowEnabled {
+            content
+                .overlay(
+                    ZStack {
+                        // 1. Red dispersion (offset top-left)
+                        RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                            .stroke(Color.red.opacity(opacity), lineWidth: lineWidth)
+                            .offset(x: -0.6, y: -0.4)
+                            .blendMode(.plusLighter)
+                        
+                        // 2. Green dispersion (offset center-bottom)
+                        RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                            .stroke(Color.green.opacity(opacity * 0.9), lineWidth: lineWidth)
+                            .offset(x: 0, y: 0.3)
+                            .blendMode(.plusLighter)
+                        
+                        // 3. Blue dispersion (offset bottom-right)
+                        RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                            .stroke(Color.blue.opacity(opacity), lineWidth: lineWidth)
+                            .offset(x: 0.6, y: 0.4)
+                            .blendMode(.plusLighter)
+                    }
+                )
+        } else {
+            content
+        }
     }
 }
 

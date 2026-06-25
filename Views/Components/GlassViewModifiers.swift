@@ -3,10 +3,14 @@ import SwiftUI
 /// A custom view modifier that applies a premium "Liquid Glass" effect to any SwiftUI view.
 /// This style leverages iOS native ultraThinMaterial combined with custom specular highlight overlays
 /// and depth shadows to simulate refractive glass.
+/// Supports global @AppStorage customization of blur values.
 public struct LiquidGlassModifier: ViewModifier {
     public var cornerRadius: CGFloat
     public var shadowRadius: CGFloat
     public var borderOpacity: Double
+    
+    // Global User Customizable Glass Blur Radius (AppStorage synced)
+    @AppStorage("glassBlurRadius") private var globalBlurRadius: Double = 16.0
     
     public init(cornerRadius: CGFloat = 24, shadowRadius: CGFloat = 16, borderOpacity: Double = 0.25) {
         self.cornerRadius = cornerRadius
@@ -16,8 +20,12 @@ public struct LiquidGlassModifier: ViewModifier {
     
     public func body(content: Content) -> some View {
         content
-            // 1. Native High-refraction background material
-            .background(.ultraThinMaterial)
+            // 1. Dynamic customizable glass material background
+            .background(
+                Color.clear
+                    .background(.ultraThinMaterial)
+                    .blur(radius: CGFloat(globalBlurRadius))
+            )
             // 2. Continuous corner radius clipping
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
             // 3. Multi-directional 0.5px edge micro-glow border (top lit, bottom deep)
@@ -28,16 +36,16 @@ public struct LiquidGlassModifier: ViewModifier {
                             colors: [
                                 .white.opacity(borderOpacity * 1.6),
                                 .white.opacity(borderOpacity * 0.4),
-                                .black.opacity(borderOpacity * 0.15),
+                                .black.opacity(0.15),
                                 .white.opacity(borderOpacity * 0.6)
                             ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         ),
-                        lineWidth: 0.8 // Sharp 0.5 - 0.8px border
+                        lineWidth: 0.8
                     )
             )
-            // 4. Double shadows: soft depth shadow below, and subtle highlights above
+            // 4. Double shadows
             .shadow(color: Color.black.opacity(0.1), radius: shadowRadius, x: 0, y: shadowRadius * 0.4)
             .shadow(color: Color.white.opacity(0.15), radius: 1, x: 0, y: -0.5) // Edge refraction top highlight
     }
@@ -48,21 +56,26 @@ public struct LiquidGlassModifier: ViewModifier {
 public struct LiquidGlassButtonStyle: ButtonStyle {
     @State private var touchLocation: CGPoint = .zero
     
+    // Global User Customizable Glass Blur Radius
+    @AppStorage("glassBlurRadius") private var globalBlurRadius: Double = 16.0
+    
     public init() {}
     
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            // 1. Physical scale shrink on press
+            // 1. Scale shrink on press
             .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
             .animation(.spring(response: 0.25, dampingFraction: 0.65), value: configuration.isPressed)
-            // 2. Liquid Glass Material Background
+            // 2. Liquid Glass Material Background (synced blur)
             .background(
                 ZStack {
                     // Thick glass body
                     RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .fill(.ultraThinMaterial)
+                        .fill(Color.clear.background(.ultraThinMaterial))
+                        .blur(radius: CGFloat(globalBlurRadius))
+                        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                         .opacity(configuration.isPressed ? 0.80 : 1.0)
-                        // Darkens internal material on press to simulate physical indentation
+                        // Darkens internal material on press
                         .overlay(
                             RoundedRectangle(cornerRadius: 18, style: .continuous)
                                 .fill(Color.black.opacity(configuration.isPressed ? 0.15 : 0.0))
@@ -83,7 +96,7 @@ public struct LiquidGlassButtonStyle: ButtonStyle {
                     }
                 }
             )
-            // 3. Edge Micro-Glow Border (contracts and dims on press)
+            // 3. Edge Micro-Glow Border
             .overlay(
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
                     .stroke(
@@ -147,34 +160,6 @@ extension View {
                 .blur(radius: radius)
                 .offset(y: offsetY)
                 .mask(shape)
-        )
-    }
-}
-
-extension Color {
-    /// Initializes a SwiftUI Color from a hexadecimal string.
-    public init(hex: String) {
-        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
-        var int: UInt64 = 0
-        Scanner(string: hex).scanHexInt64(&int)
-        let a, r, g, b: UInt64
-        switch hex.count {
-        case 3: // RGB (12-bit)
-            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
-        case 6: // RGB (24-bit)
-            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
-        case 8: // ARGB (32-bit)
-            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
-        default:
-            (a, r, g, b) = (255, 255, 255, 255)
-        }
-
-        self.init(
-            .sRGB,
-            red: Double(r) / 255,
-            green: Double(g) / 255,
-            blue:  Double(b) / 255,
-            opacity: Double(a) / 255
         )
     }
 }
