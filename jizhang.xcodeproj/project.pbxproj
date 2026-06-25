@@ -1,0 +1,320 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2D0000312D0000312D000031 /* jizhangApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0000212D0000212D000021 /* jizhangApp.swift */; };
+		2D0000322D0000322D000032 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0000222D0000222D000022 /* Category.swift */; };
+		2D0000332D0000332D000033 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0000232D0000232D000023 /* Transaction.swift */; };
+		2D0000342D0000342D000034 /* GlassViewModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0000242D0000242D000024 /* GlassViewModifiers.swift */; };
+		2D0000352D0000352D000035 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0000252D0000252D000025 /* DashboardView.swift */; };
+		2D0000362D0000362D000036 /* PlaceholderViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0000262D0000262D000026 /* PlaceholderViews.swift */; };
+		2D0000372D0000372D000037 /* TabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0000272D0000272D000027 /* TabController.swift */; };
+		2D0000382D0000382D000038 /* AddTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0000282D0000282D000028 /* AddTransactionView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2D00000A2D00000A2D00000A /* jizhang.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = jizhang.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D0000212D0000212D000021 /* jizhangApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = jizhangApp.swift; sourceTree = "<group>"; };
+		2D0000222D0000222D000022 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		2D0000232D0000232D000023 /* Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
+		2D0000242D0000242D000024 /* GlassViewModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassViewModifiers.swift; sourceTree = "<group>"; };
+		2D0000252D0000252D000025 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		2D0000262D0000262D000026 /* PlaceholderViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderViews.swift; sourceTree = "<group>"; };
+		2D0000272D0000272D000027 /* TabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabController.swift; sourceTree = "<group>"; };
+		2D0000282D0000282D000028 /* AddTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2D0000042D0000042D000004 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2D0000062D0000062D000006 /* CustomRoot */ = {
+			isa = PBXGroup;
+			children = (
+				2D0000212D0000212D000021 /* jizhangApp.swift */,
+				2D0000072D0000072D000007 /* Models */,
+				2D0000082D0000082D000008 /* Views */,
+				2D0000092D0000092D000009 /* Products */,
+			);
+			path = ..;
+			sourceTree = "<group>";
+		};
+		2D0000072D0000072D000007 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				2D0000222D0000222D000022 /* Category.swift */,
+				2D0000232D0000232D000023 /* Transaction.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		2D0000082D0000082D000008 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2D0000282D0000282D000028 /* AddTransactionView.swift */,
+				2D0000252D0000252D000025 /* DashboardView.swift */,
+				2D0000262D0000262D000026 /* PlaceholderViews.swift */,
+				2D0000272D0000272D000027 /* TabController.swift */,
+				2D00000C2D00000C2D00000E /* Components */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2D00000C2D00000C2D00000E /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				2D0000242D0000242D000024 /* GlassViewModifiers.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		2D0000092D0000092D000009 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2D00000A2D00000A2D00000A /* jizhang.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2D0000022D0000022D000002 /* jizhang */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2D00000C2D00000C2D00000C /* Build configuration list for PBXNativeTarget "jizhang" */;
+			buildPhases = (
+				2D0000032D0000032D000003 /* Sources */,
+				2D0000042D0000042D000004 /* Frameworks */,
+				2D0000052D0000052D000005 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = jizhang;
+			productName = jizhang;
+			productReference = 2D00000A2D00000A2D00000A /* jizhang.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2D0000012D0000012D000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					2D0000022D0000022D000002 = {
+						CreatedOnToolsVersion = 16.0;
+						LastSwiftMigration = 1600;
+					};
+				};
+			};
+			buildConfigurationList = 2D00000B2D00000B2D00000B /* Build configuration list for PBXProject "jizhang" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2D0000062D0000062D000006 /* CustomRoot */;
+			productRefGroup = 2D0000092D0000092D000009 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2D0000022D0000022D000002 /* jizhang */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2D0000052D0000052D000005 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2D0000032D0000032D000003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D0000312D0000312D000031 /* jizhangApp.swift in Sources */,
+				2D0000322D0000322D000032 /* Category.swift in Sources */,
+				2D0000332D0000332D000033 /* Transaction.swift in Sources */,
+				2D0000342D0000342D000034 /* GlassViewModifiers.swift in Sources */,
+				2D0000352D0000352D000035 /* DashboardView.swift in Sources */,
+				2D0000362D0000362D000036 /* PlaceholderViews.swift in Sources */,
+				2D0000372D0000372D000037 /* TabController.swift in Sources */,
+				2D0000382D0000382D000038 /* AddTransactionView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2D00000D2D00000D2D00000D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOMATIC = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		2D00000E2D00000E2D00000E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOMATIC = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2D00000F2D00000F2D00000F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSETS = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "苹果记账";
+				INFOPLIST_KEY_UILaunchScreen_StoryboardName = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.apple.jizhang;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2D0000102D0000102D000010 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSETS = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "苹果记账";
+				INFOPLIST_KEY_UILaunchScreen_StoryboardName = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.apple.jizhang;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2D00000B2D00000B2D00000B /* Build configuration list for PBXProject "jizhang" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2D00000D2D00000D2D00000D /* Debug */,
+				2D00000E2D00000E2D00000E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2D00000C2D00000C2D00000C /* Build configuration list for PBXNativeTarget "jizhang" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2D00000F2D00000F2D00000F /* Debug */,
+				2D0000102D0000102D000010 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2D0000012D0000012D000001 /* Project object */;
+}
