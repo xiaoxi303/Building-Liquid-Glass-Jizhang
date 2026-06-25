@@ -71,7 +71,7 @@ public struct LiquidGlassButtonStyle: ButtonStyle {
                 ZStack {
                     // Thick glass body
                     RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .fill(Color.clear.background(.ultraThinMaterial))
+                        .fill(.ultraThinMaterial)
                         .blur(radius: CGFloat(globalBlurRadius))
                         .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                         .opacity(configuration.isPressed ? 0.80 : 1.0)
@@ -128,6 +128,16 @@ public struct LiquidGlassButtonStyle: ButtonStyle {
                         )
                 }
             )
+    }
+}
+
+/// A button style that shrinks slightly when pressed, providing spring physical feedback
+public struct ShrinkButtonStyle: ButtonStyle {
+    public init() {}
+    public func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.94 : 1.0)
+            .animation(.spring(response: 0.2, dampingFraction: 0.6), value: configuration.isPressed)
     }
 }
 
