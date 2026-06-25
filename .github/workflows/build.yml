@@ -21,6 +21,16 @@ jobs:
           sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
           xcodebuild -version
 
+      - name: Install XcodeGen
+        # Installs XcodeGen via Homebrew to handle dynamic xcodeproj creation
+        run: |
+          brew install xcodegen
+
+      - name: Generate Xcode Project
+        # Generates the jizhang.xcodeproj dynamically based on project.yml specification
+        run: |
+          xcodegen generate
+
       - name: Build Unsigned App
         run: |
           xcodebuild build \
